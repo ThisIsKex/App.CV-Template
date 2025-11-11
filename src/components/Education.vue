@@ -13,12 +13,10 @@ defineProps<{
       Ausbildung
     </h2>
     <div v-for="(edu, index) in education" :key="index" class="education-item">
-      <p>
-        <strong>{{ edu.degree }}</strong
-        ><br />
-        {{ edu.institution }}<br />
-        <em>{{ edu.period }}</em>
-      </p>
+      <h3>
+        <strong>{{ edu.degree }}</strong> – {{ edu.institution }}
+      </h3>
+      <span class="period">{{ edu.period }}</span>
     </div>
   </section>
 </template>
@@ -52,28 +50,44 @@ h2 {
   margin-bottom: 15px;
   page-break-inside: avoid;
   break-inside: avoid;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 20px;
 }
 
 .education-item:last-child {
   margin-bottom: 0;
 }
 
-.education-item p {
+.education-item h3 {
   margin: 0;
-  line-height: 1.6;
+  font-size: 16px;
+  font-weight: normal;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.education-item .period {
+  color: #777;
+  font-size: 16px;
+  white-space: nowrap;
+  align-self: baseline;
 }
 
 @media print {
   .cv-section {
     box-shadow: none;
-    margin: 20px auto;
+    margin: 5px auto;
     page-break-inside: auto;
+    padding: 15px 1.5cm;
   }
   
   .education-item {
     page-break-inside: avoid;
     break-inside: avoid;
     margin-bottom: 12px;
+    gap: 5px 15px;
   }
 }
 </style>

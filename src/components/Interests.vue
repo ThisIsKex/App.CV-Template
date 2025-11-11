@@ -46,8 +46,9 @@ p {
 @media print {
   .cv-section {
     box-shadow: none;
-    margin: 20px auto;
+    margin: 5px auto;
     page-break-inside: avoid;
+    padding: 15px 1.5cm;
   }
 }
 </style>

@@ -58,9 +58,11 @@ defineProps<{
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 30px;
+  justify-content: flex-start;
+  gap: 40px;
   flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .profile-image {
@@ -70,33 +72,41 @@ defineProps<{
   object-fit: cover;
   border: 4px solid white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .header-text {
   text-align: left;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .cv-header h1 {
-  margin: 0 0 10px 0;
+  margin: 0 0 12px 0;
   font-weight: 500;
   letter-spacing: 1px;
-  font-size: 2.5rem;
+  font-size: 2.3rem;
+  line-height: 1.1;
+  word-wrap: break-word;
 }
 
 .contact-info {
-  margin: 10px 0;
-  font-size: 14px;
+  margin: 12px 0;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .contact-info span {
-  margin: 0 15px;
+  margin-right: 15px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .social-links {
-  margin: 10px 0 0 5px;
+  margin: 10px 0 0 -10px;
   font-size: 14px;
 }
 
@@ -117,36 +127,90 @@ defineProps<{
   .cv-header {
     background-color: #0e5091 !important;
     color: white !important;
-    padding: 30px 1.5cm;
+    padding: 20px 1.5cm;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     margin: 0 !important;
     width: 100% !important;
     box-sizing: border-box;
+    text-align: left;
+  }
+
+  .header-content {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
   }
 
   .profile-image {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    width: 80px;
+    height: 80px;
+    float: left;
+    margin-right: 20px;
+    margin-top: 5px;
+  }
+
+  .header-text {
+    display: block;
+    margin-left: 100px;
+  }
+
+  .cv-header h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+  }
+
+  .contact-info {
+    font-size: 11px;
+    line-height: 1.3;
+    margin: 6px 0;
+  }
+
+  .contact-info span {
+    margin-right: 10px;
+    white-space: nowrap;
+  }
+
+  .social-links {
+    font-size: 11px;
+    margin-top: 6px;
   }
 
   .social-links a {
     color: white !important;
-  }
-
-  .contact-info,
-  .social-links {
-    color: white !important;
+    margin-right: 10px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 750px) {
   .header-content {
     flex-direction: column;
+    gap: 25px;
   }
 
   .header-text {
     text-align: center;
+    min-width: 0;
+  }
+  
+  .cv-header h1 {
+    font-size: 2.1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-info span {
+    display: block;
+    margin: 8px 0;
+    justify-content: center;
+  }
+  
+  .cv-header h1 {
+    font-size: 1.9rem;
   }
 }
 </style>

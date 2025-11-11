@@ -13,12 +13,10 @@ defineProps<{
       Berufserfahrung
     </h2>
     <div v-for="(exp, index) in experiences" :key="index" class="experience-item">
-      <div class="experience-header">
-        <h3>
-          <strong>{{ exp.title }}</strong> – {{ exp.company }}, {{ exp.location }}
-        </h3>
-        <span class="period">{{ exp.period }}</span>
-      </div>
+      <h3>
+        <strong>{{ exp.title }}</strong> – {{ exp.company }}, {{ exp.location }}
+      </h3>
+      <span class="period">{{ exp.period }}</span>
       <ul>
         <li v-for="(resp, idx) in exp.responsibilities" :key="idx">{{ resp }}</li>
       </ul>
@@ -55,30 +53,40 @@ h2 {
   margin-bottom: 25px;
   page-break-inside: avoid;
   break-inside: avoid;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title period"
+    "tasks .";
+  gap: 10px 20px;
 }
 
 .experience-item:last-child {
   margin-bottom: 0;
 }
 
-.experience-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.experience-header h3 {
+.experience-item h3 {
+  grid-area: title;
   margin: 0;
   font-size: 16px;
   font-weight: normal;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-.period {
+.experience-item .period {
+  grid-area: period;
   color: #777;
-  font-size: 14px;
+  font-size: 16px;
   white-space: nowrap;
+  align-self: baseline;
+}
+
+.experience-item ul {
+  grid-area: tasks;
+  margin: 0;
+  padding-left: 20px;
 }
 
 ul {
@@ -93,26 +101,23 @@ li {
 @media print {
   .cv-section {
     box-shadow: none;
-    margin: 20px auto;
+    margin: 5px auto;
     page-break-inside: auto;
-    padding-top: 40px;
+    padding: 15px 1.5cm;
   }
-  
+
   .experience-item {
     page-break-inside: avoid;
     break-inside: avoid;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     orphans: 3;
     widows: 3;
+    gap: 5px 15px;
   }
-  
-  .experience-item + .experience-item {
-    border-top: 40px solid transparent;
-    margin-top: -40px;
-  }
-  
-  .experience-header {
-    page-break-after: avoid;
+
+  .experience-item+.experience-item {
+    border-top: 20px solid transparent;
+    margin-top: -20px;
   }
 }
 </style>

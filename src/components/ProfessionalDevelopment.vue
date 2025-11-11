@@ -9,17 +9,15 @@ defineProps<{
 <template>
   <section class="cv-section">
     <h2>
-      <font-awesome-icon icon="certificate" class="section-icon" />
+      <font-awesome-icon icon="lightbulb" class="section-icon" />
       Weiterbildung
     </h2>
     <div v-for="(dev, index) in professionalDevelopment" :key="index" class="development-item">
-      <p>
-        <strong>{{ dev.title }}</strong
-        ><br />
-        {{ dev.institution }}<br />
-        <em>{{ dev.period }}</em>
-        <span v-if="dev.description"><br />{{ dev.description }}</span>
-      </p>
+      <h3>
+        <strong>{{ dev.title }}</strong> – {{ dev.institution }}
+      </h3>
+      <span class="period">{{ dev.period }}</span>
+      <p v-if="dev.description" class="description">{{ dev.description }}</p>
     </div>
   </section>
 </template>
@@ -53,28 +51,56 @@ h2 {
   margin-bottom: 15px;
   page-break-inside: avoid;
   break-inside: avoid;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 
+    "title period"
+    "description .";
+  gap: 10px 20px;
 }
 
 .development-item:last-child {
   margin-bottom: 0;
 }
 
-.development-item p {
+.development-item h3 {
+  grid-area: title;
   margin: 0;
+  font-size: 16px;
+  font-weight: normal;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.development-item .period {
+  grid-area: period;
+  color: #777;
+  font-size: 16px;
+  white-space: nowrap;
+  align-self: baseline;
+}
+
+.description {
+  grid-area: description;
+  margin: 8px 0 0 0;
   line-height: 1.6;
+  color: #555;
 }
 
 @media print {
   .cv-section {
     box-shadow: none;
-    margin: 20px auto;
+    margin: 5px auto;
     page-break-inside: auto;
+    padding: 15px 1.5cm;
   }
   
   .development-item {
     page-break-inside: avoid;
     break-inside: avoid;
     margin-bottom: 12px;
+    gap: 5px 15px;
   }
 }
 </style>
