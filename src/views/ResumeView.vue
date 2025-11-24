@@ -30,19 +30,21 @@ const handlePrint = () => {
 <template>
   <div class="cv-app" v-if="cvStore.resumeData">
     <div class="print-controls">
-      <button @click="router.push('/edit');" class="edit-button">
+      <button @click="router.push('/edit')" class="edit-button">
         <font-awesome-icon icon="pen" /> Bearbeiten
       </button>
       <button @click="handlePrint" class="print-button">
         <font-awesome-icon icon="print" /> PDF/Drucken
       </button>
-
     </div>
     <Header :basics="cvStore.resumeData.basics" />
     <Work :work="cvStore.resumeData.work" />
     <Education :education="cvStore.resumeData.education" />
     <Skills :skills="cvStore.resumeData.skills" />
-    <Projects v-if="cvStore.resumeData.projects.length > 0" :projects="cvStore.resumeData.projects" />
+    <Projects
+      v-if="cvStore.resumeData.projects.length > 0"
+      :projects="cvStore.resumeData.projects"
+    />
     <Certificates :certificates="cvStore.resumeData.certificates" />
     <Interests :interests="cvStore.resumeData.interests" />
 
@@ -137,14 +139,14 @@ const handlePrint = () => {
 
 @media print {
   @page {
-    margin-top: 1.0cm;
-    margin-bottom: 1.0cm;
+    margin-top: 1cm;
+    margin-bottom: 1cm;
     size: A4;
   }
 
   @page :first {
     margin: 0;
-    margin-bottom: 1.0cm;
+    margin-bottom: 1cm;
     size: A4;
   }
 

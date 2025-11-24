@@ -1,4 +1,3 @@
-
 // JSON Resume Schema: https://jsonresume.org/schema
 
 export interface Basics {

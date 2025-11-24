@@ -17,8 +17,13 @@
   </section>
 </template>
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
-import type { Resume } from '../../types/cv.types';
+import { defineProps, defineEmits } from "vue";
+import type { Resume } from "../../types/cv.types";
 defineProps<{ modelValue: Resume }>();
-const emit = defineEmits(['addInterest', 'removeInterest', 'addInterestKeyword', 'removeInterestKeyword']);
+const emit = defineEmits([
+  "addInterest",
+  "removeInterest",
+  "addInterestKeyword",
+  "removeInterestKeyword",
+]);
 </script>

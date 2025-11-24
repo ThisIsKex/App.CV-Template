@@ -76,7 +76,7 @@ strong {
     page-break-inside: avoid;
     break-inside: avoid;
   }
-  
+
   .experience-header,
   h3,
   h2 {
