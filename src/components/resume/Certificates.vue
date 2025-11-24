@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Certificate } from "../../types/cv.types";
+import type { Certificate } from "../../types/resume.types";
 import { defineProps } from "vue";
 
 defineProps<{

@@ -13,7 +13,7 @@
 </template>
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
-import type { Resume } from "../../types/cv.types";
+import type { Resume } from "../../types/resume.types";
 defineProps<{ modelValue: Resume }>();
 const emit = defineEmits(["addCertificate", "removeCertificate"]);
 </script>

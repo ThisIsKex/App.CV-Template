@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Work } from "../../types/cv.types";
+import type { Work } from "../../types/resume.types";
 import { defineProps } from "vue";
 defineProps<{
   work: Work[];

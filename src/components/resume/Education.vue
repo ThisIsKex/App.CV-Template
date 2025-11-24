@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Education } from "../../types/cv.types";
+import type { Education } from "../../types/resume.types";
 import { defineProps } from "vue";
 defineProps<{
   education: Education[];

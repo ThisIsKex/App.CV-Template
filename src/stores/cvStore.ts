@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { Resume } from "../types/cv.types";
+import type { Resume } from "../types/resume.types";
 
 export const useCVStore = defineStore("cv", () => {
   // State

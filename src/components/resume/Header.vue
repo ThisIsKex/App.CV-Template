@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Basics } from "../../types/cv.types";
+import type { Basics } from "../../types/resume.types";
 import { defineProps } from "vue";
 defineProps<{
   basics: Basics;

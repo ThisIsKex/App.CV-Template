@@ -11,7 +11,7 @@ import PublicationsEditor from "../components/editor/PublicationsEditor.vue";
 import LanguagesEditor from "../components/editor/LanguagesEditor.vue";
 import ReferencesEditor from "../components/editor/ReferencesEditor.vue";
 import { ref, onMounted } from "vue";
-import type { Resume } from "../types/cv.types";
+import type { Resume } from "../types/resume.types";
 
 const fileInputRef = ref<HTMLInputElement | null>(null);
 
