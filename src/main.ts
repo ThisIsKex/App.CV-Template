@@ -56,7 +56,7 @@ library.add(
   faUser,
   faPlus,
   faTrash,
-  faTimes
+  faTimes,
 );
 
 const app = createApp(App);

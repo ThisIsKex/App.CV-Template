@@ -1,10 +1,33 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ToastContainer from "./components/ToastContainer.vue";
+</script>
 
 <template>
+  <ToastContainer />
   <RouterView />
 </template>
 
 <style>
+:root {
+  --color-primary: #0e5091;
+  --color-primary-dark: #0a3a6e;
+  --color-success: #28a745;
+  --color-success-dark: #218838;
+  --color-text-light: #777;
+  --color-text-dark: #333;
+  --color-background: #fafafa;
+  --color-white: #ffffff;
+  --color-error: #dc3545;
+  --color-warning: #ffc107;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 3px 10px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -14,8 +37,8 @@
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #fafafa;
-  color: #333;
+  background-color: var(--color-background);
+  color: var(--color-text-dark);
   line-height: 1.6;
 }
 
@@ -26,7 +49,7 @@ body {
 
 .cv-footer {
   text-align: center;
-  color: #777;
+  color: var(--color-text-light);
   padding: 20px;
   font-size: 13px;
   margin-top: 40px;

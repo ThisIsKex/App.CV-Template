@@ -25,32 +25,82 @@ const handlePrint = () => {
     isPrinting.value = false;
   }, 1000);
 };
+
+const isEmpty = (arr: any[] | undefined) => !arr || arr.length === 0;
+const hasContent = () => {
+  const data = cvStore.resumeData;
+  return (
+    data.basics.name ||
+    !isEmpty(data.work) ||
+    !isEmpty(data.education) ||
+    !isEmpty(data.skills) ||
+    !isEmpty(data.projects)
+  );
+};
 </script>
 
 <template>
-  <div class="cv-app" v-if="cvStore.resumeData">
-    <div class="print-controls">
+  <div class="cv-app">
+    <!-- Loading State -->
+    <div v-if="cvStore.isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Lebenslauf wird geladen...</p>
+    </div>
+
+    <!-- Error State -->
+    <div v-else-if="cvStore.error" class="error-container">
+      <div class="error-icon">⚠️</div>
+      <h2>Fehler beim Laden</h2>
+      <p>{{ cvStore.error }}</p>
       <button @click="router.push('/edit')" class="edit-button">
-        <font-awesome-icon icon="pen" /> Bearbeiten
-      </button>
-      <button @click="handlePrint" class="print-button">
-        <font-awesome-icon icon="print" /> PDF/Drucken
+        <font-awesome-icon icon="pen" /> Zum Editor
       </button>
     </div>
-    <Header :basics="cvStore.resumeData.basics" />
-    <Work :work="cvStore.resumeData.work" />
-    <Education :education="cvStore.resumeData.education" />
-    <Skills :skills="cvStore.resumeData.skills" />
-    <Projects
-      v-if="cvStore.resumeData.projects.length > 0"
-      :projects="cvStore.resumeData.projects"
-    />
-    <Certificates :certificates="cvStore.resumeData.certificates" />
-    <Interests :interests="cvStore.resumeData.interests" />
 
-    <footer class="cv-footer">
-      © 2025 {{ cvStore.resumeData.basics.name }} – Erstellt mit Vue 3 & TypeScript
-    </footer>
+    <!-- Empty State -->
+    <div v-else-if="!hasContent()" class="empty-container">
+      <div class="empty-icon">📄</div>
+      <h2>Noch keine Daten vorhanden</h2>
+      <p>Erstellen Sie Ihren Lebenslauf im Editor oder laden Sie eine JSON-Datei hoch.</p>
+      <button @click="router.push('/edit')" class="edit-button">
+        <font-awesome-icon icon="pen" /> Zum Editor
+      </button>
+    </div>
+
+    <!-- Content State -->
+    <div v-else>
+      <div class="print-controls">
+        <button @click="router.push('/edit')" class="edit-button">
+          <font-awesome-icon icon="pen" /> Bearbeiten
+        </button>
+        <button @click="handlePrint" class="print-button">
+          <font-awesome-icon icon="print" /> PDF/Drucken
+        </button>
+      </div>
+      <Header :basics="cvStore.resumeData.basics" />
+      <Work v-if="!isEmpty(cvStore.resumeData.work)" :work="cvStore.resumeData.work" />
+      <Education
+        v-if="!isEmpty(cvStore.resumeData.education)"
+        :education="cvStore.resumeData.education"
+      />
+      <Skills v-if="!isEmpty(cvStore.resumeData.skills)" :skills="cvStore.resumeData.skills" />
+      <Projects
+        v-if="!isEmpty(cvStore.resumeData.projects)"
+        :projects="cvStore.resumeData.projects"
+      />
+      <Certificates
+        v-if="!isEmpty(cvStore.resumeData.certificates)"
+        :certificates="cvStore.resumeData.certificates"
+      />
+      <Interests
+        v-if="!isEmpty(cvStore.resumeData.interests)"
+        :interests="cvStore.resumeData.interests"
+      />
+
+      <footer class="cv-footer">
+        © 2025 {{ cvStore.resumeData.basics.name }} – Erstellt mit Vue 3 & TypeScript
+      </footer>
+    </div>
   </div>
 </template>
 
@@ -60,12 +110,12 @@ const handlePrint = () => {
   padding: 20px;
   background: #f5f5f5;
   margin-bottom: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
 }
 
 .print-button {
-  background-color: #0e5091;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -79,7 +129,7 @@ const handlePrint = () => {
 }
 
 .print-button:hover {
-  background-color: #0a3a6e;
+  background-color: var(--color-primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(14, 80, 145, 0.3);
 }
@@ -90,7 +140,7 @@ const handlePrint = () => {
 }
 
 .edit-button {
-  background-color: #28a745;
+  background-color: var(--color-success);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -105,7 +155,7 @@ const handlePrint = () => {
 }
 
 .edit-button:hover {
-  background-color: #218838;
+  background-color: var(--color-success-dark);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
@@ -115,13 +165,65 @@ const handlePrint = () => {
   box-shadow: 0 2px 6px rgba(40, 167, 69, 0.2);
 }
 
-.loading {
+.loading-container,
+.error-container,
+.empty-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-size: 1.5rem;
-  color: #0e5091;
+  padding: 40px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container p {
+  font-size: 1.2rem;
+  color: var(--color-primary);
+}
+
+.error-container {
+  color: var(--color-error);
+}
+
+.error-icon,
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.error-container h2,
+.empty-container h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: var(--color-text-dark);
+}
+
+.error-container p,
+.empty-container p {
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  margin-bottom: 24px;
+  max-width: 500px;
 }
 
 .cv-app {
@@ -131,7 +233,7 @@ const handlePrint = () => {
 
 .cv-footer {
   text-align: center;
-  color: #777;
+  color: var(--color-text-light);
   padding: 20px;
   font-size: 13px;
   margin-top: 40px;
@@ -150,8 +252,11 @@ const handlePrint = () => {
     size: A4;
   }
 
-  .print-controls {
-    display: none;
+  .print-controls,
+  .loading-container,
+  .error-container,
+  .empty-container {
+    display: none !important;
   }
 
   .cv-footer {

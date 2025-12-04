@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Project } from "../../types/resume.types";
-import { defineProps } from "vue";
 defineProps<{
   projects: Project[];
 }>();

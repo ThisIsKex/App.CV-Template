@@ -7,7 +7,10 @@
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{js,ts,vue,css,json}\"",
-    "format:check": "prettier --check \"src/**/*.{js,ts,vue,css,json}\""
+    "format:check": "prettier --check \"src/**/*.{js,ts,vue,css,json}\"",
+    "lint": "eslint src --ext .vue,.js,.ts",
+    "lint:fix": "eslint src --ext .vue,.js,.ts --fix",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Work } from "../../types/resume.types";
-import { defineProps } from "vue";
 defineProps<{
   work: Work[];
 }>();
@@ -29,15 +28,15 @@ defineProps<{
 .cv-section {
   margin: 30px auto;
   max-width: 900px;
-  background: white;
+  background: var(--color-white);
   padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 h2 {
-  color: #0e5091;
-  border-bottom: 2px solid #0e5091;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
   padding-bottom: 6px;
   margin-bottom: 20px;
   font-size: 20px;
@@ -77,7 +76,7 @@ h2 {
 
 .experience-item .period {
   grid-area: period;
-  color: #777;
+  color: var(--color-text-light);
   font-size: 14px;
   white-space: nowrap;
   align-self: baseline;

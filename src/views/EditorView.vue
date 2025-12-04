@@ -10,106 +10,98 @@ import AwardsEditor from "../components/editor/AwardsEditor.vue";
 import PublicationsEditor from "../components/editor/PublicationsEditor.vue";
 import LanguagesEditor from "../components/editor/LanguagesEditor.vue";
 import ReferencesEditor from "../components/editor/ReferencesEditor.vue";
-import { ref, onMounted } from "vue";
-import type { Resume } from "../types/resume.types";
+import { ref, onMounted, computed } from "vue";
+import { useCVStore } from "../stores/cvStore";
+import { useToast } from "../composables/useToast";
+import { useFileHandling } from "../composables/useFileHandling";
+
+const cvStore = useCVStore();
+const { success, error: showError, warning } = useToast();
+const { downloadResume, uploadResume } = useFileHandling();
 
 const fileInputRef = ref<HTMLInputElement | null>(null);
+const showConfirmDialog = ref(false);
+
+// Computed reference to store data
+const resume = computed(() => cvStore.resumeData);
+
+onMounted(async () => {
+  await cvStore.loadResumeData();
+});
 
 function triggerFileInput() {
   fileInputRef.value?.click();
 }
 
-function getDefaultResume(): Resume {
-  return {
-    basics: {
-      name: "",
-      label: "",
-      image: "",
-      email: "",
-      phone: "",
-      url: "",
-      summary: "",
-      location: { address: "", city: "", countryCode: "", postalCode: "", region: "" },
-      profiles: [],
-    },
-    work: [],
-    volunteer: [],
-    education: [],
-    awards: [],
-    certificates: [],
-    publications: [],
-    skills: [],
-    languages: [],
-    interests: [],
-    references: [],
-    projects: [],
-  };
+function handleDownload() {
+  downloadResume(resume.value);
+  success("CV-Daten erfolgreich heruntergeladen!");
 }
 
-const resume = ref<Resume>(getDefaultResume());
-
-function downloadResume() {
-  const dataStr = JSON.stringify(resume.value, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "cv-data.json";
-  a.click();
-  URL.revokeObjectURL(url);
+function handleSave() {
+  cvStore.saveToLocalStorage();
+  success("Daten wurden gespeichert!");
 }
 
-function resetResume() {
-  if (confirm("Wirklich alle Daten zurücksetzen?")) {
-    resume.value = getDefaultResume();
-    localStorage.removeItem("cvData");
-  }
-}
-
-onMounted(() => {
-  const stored = localStorage.getItem("cvData");
-  if (stored) {
-    try {
-      resume.value = JSON.parse(stored);
-    } catch (e) {
-      resume.value = getDefaultResume();
-    }
-  }
-});
-
-function saveToLocalStorage() {
-  localStorage.setItem("cvData", JSON.stringify(resume.value));
-  alert("Daten wurden gespeichert!");
-}
-
-function handleUpload(event: Event) {
+async function handleUpload(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target?.result as string);
-      resume.value = data;
-      localStorage.setItem("cvData", JSON.stringify(data));
-      alert("Daten erfolgreich geladen und gespeichert!");
-    } catch (err) {
-      alert("Fehler beim Laden der Datei. Ungültiges JSON.");
-    }
-  };
-  reader.readAsText(file);
+
+  try {
+    const data = await uploadResume(file);
+    cvStore.updateResumeData(data);
+    success("Daten erfolgreich geladen!");
+  } catch (err) {
+    showError(err instanceof Error ? err.message : "Fehler beim Laden der Datei");
+  } finally {
+    // Reset input so the same file can be uploaded again
+    input.value = "";
+  }
 }
 
-function addArrayItem(section: keyof Resume, item: any) {
-  (resume.value[section] as any[]).push(item);
+function requestReset() {
+  showConfirmDialog.value = true;
 }
 
-function removeArrayItem(section: keyof Resume, idx: number) {
-  (resume.value[section] as any[]).splice(idx, 1);
+function confirmReset() {
+  cvStore.resetResumeData();
+  showConfirmDialog.value = false;
+  warning("Alle Daten wurden zurückgesetzt");
+}
+
+function cancelReset() {
+  showConfirmDialog.value = false;
+}
+
+function addArrayItem<K extends keyof typeof resume.value>(
+  section: K,
+  item: (typeof resume.value)[K] extends Array<infer T> ? T : never,
+) {
+  cvStore.addToArray(section, item);
+}
+
+function removeArrayItem<K extends keyof typeof resume.value>(section: K, idx: number) {
+  cvStore.removeFromArray(section, idx);
 }
 </script>
 <template>
   <div class="editor-view">
+    <!-- Confirmation Dialog -->
+    <div v-if="showConfirmDialog" class="modal-overlay" @click="cancelReset">
+      <div class="modal-content" @click.stop>
+        <h3>Bestätigung erforderlich</h3>
+        <p>
+          Möchten Sie wirklich alle Daten zurücksetzen? Diese Aktion kann nicht rückgängig gemacht
+          werden.
+        </p>
+        <div class="modal-actions">
+          <button class="btn-cancel" @click="cancelReset">Abbrechen</button>
+          <button class="btn-confirm" @click="confirmReset">Zurücksetzen</button>
+        </div>
+      </div>
+    </div>
+
     <div class="editor-toolbar">
       <button class="editor-btn" @click="triggerFileInput">JSON Resume hochladen</button>
       <input
@@ -119,9 +111,9 @@ function removeArrayItem(section: keyof Resume, idx: number) {
         @change="handleUpload"
         style="display: none"
       />
-      <button class="editor-btn" @click="saveToLocalStorage">Speichern</button>
-      <button class="editor-btn" @click="downloadResume">Download</button>
-      <button class="editor-btn" @click="resetResume">Reset</button>
+      <button class="editor-btn" @click="handleSave">Speichern</button>
+      <button class="editor-btn" @click="handleDownload">Download</button>
+      <button class="editor-btn btn-danger" @click="requestReset">Reset</button>
     </div>
 
     <h1>CV Editor (JSON Resume Schema)</h1>
@@ -246,16 +238,16 @@ function removeArrayItem(section: keyof Resume, idx: number) {
 
 section {
   margin-bottom: 32px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 24px 20px;
 }
 
 h2 {
   margin-top: 0;
   font-size: 1.3rem;
-  color: #0e5091;
+  color: var(--color-primary);
 }
 
 .array-block {
@@ -278,15 +270,16 @@ textarea {
 button {
   margin: 4px 0 12px 0;
   padding: 6px 14px;
-  background: #0e5091;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
 button:hover {
-  background: #09325c;
+  background: var(--color-primary-dark);
 }
 
 .editor-toolbar {
@@ -296,8 +289,8 @@ button:hover {
 }
 
 .editor-btn {
-  background: #0e5091;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-white);
   padding: 8px 18px;
   border-radius: 4px;
   border: none;
@@ -313,6 +306,81 @@ button:hover {
 }
 
 .editor-btn:hover {
-  background: #09325c;
+  background: var(--color-primary-dark);
+}
+
+.editor-btn.btn-danger {
+  background: var(--color-error);
+}
+
+.editor-btn.btn-danger:hover {
+  background: #c82333;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--color-white);
+  padding: 32px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--color-primary);
+}
+
+.modal-content p {
+  margin: 16px 0 24px;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-cancel,
+.btn-confirm {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background: #6c757d;
+  color: var(--color-white);
+}
+
+.btn-cancel:hover {
+  background: #5a6268;
+}
+
+.btn-confirm {
+  background: var(--color-error);
+  color: var(--color-white);
+}
+
+.btn-confirm:hover {
+  background: #c82333;
 }
 </style>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Skill } from "../../types/resume.types";
-import { defineProps } from "vue";
+import type { Skill } from "../../types/resume.types";
 defineProps<{
   skills: Skill[];
 }>();

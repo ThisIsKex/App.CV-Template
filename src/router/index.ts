@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ResumeView from "../views/ResumeView.vue";
-import EditorView from "../views/EditorView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,12 +6,12 @@ const router = createRouter({
     {
       path: "/",
       name: "resume",
-      component: ResumeView,
+      component: () => import("../views/ResumeView.vue"),
     },
     {
       path: "/edit",
       name: "editor",
-      component: EditorView,
+      component: () => import("../views/EditorView.vue"),
     },
   ],
 });

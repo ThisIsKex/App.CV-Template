@@ -1,205 +1,107 @@
-# Resume Vue App
+# CV Template - Vue 3 + TypeScript
 
-A modern, professional resume application built with **Vue 3**, **TypeScript**, **Vite**, and **Font Awesome**. 
-Optimized for PDF export with perfect print layout.
+A modern, responsive resume template built with Vue 3, TypeScript, and Vite.
 
 ## ✨ Features
 
-- ✏️ **Resume Data Editor** – User-friendly interface at `/edit` for editing all resume data
-- 💾 **JSON Export/Import** – Save and load resume data as JSON files
-- 🔄 **LocalStorage** – Automatic saving in the browser
-- 📦 **Automatic Loading** – Resume data is automatically loaded from `public/resume-data.json`
-- 🎨 Modern, responsive design
-- 📝 Type-safe data management with TypeScript
-- 🖼️ Profile image integration (circular)
-- 🎯 Font Awesome icons
-- 📄 Print-optimized for PDF export
-- 🔄 Hot Module Replacement (HMR)
-- 🎨 Custom color scheme (#0e5091)
+- 📝 **Live Editor** - Edit your resume in real-time
+- 💾 **Auto-Save** - Automatic saving to localStorage
+- 📄 **JSON Resume Schema** - Standardized format
+- 🎨 **Print Optimized** - Perfect for PDF export
+- 🔄 **Import/Export** - Upload and download JSON files
+- 🎯 **Type-Safe** - Fully typed with TypeScript
+- 🚀 **Modern Stack** - Vue 3 Composition API, Pinia, Vue Router
+- 🎨 **Theming** - CSS Custom Properties for easy customization
 
-## 📋 Requirements
-
-- Node.js (v16 or higher)
-- npm or yarn
-
-## 🚀 Installation
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
 npm install
-```
 
-## ⚙️ First Setup
-
-**Important step:** Before starting the app for the first time, copy the example resume data:
-
-```bash
-# Copy the example file to the actual resume file
-cp public/resume-data-example.json public/resume-data.json
-```
-
-**Windows (PowerShell/CMD):**
-```cmd
-copy public\resume-data-example.json public\resume-data.json
-```
-
-The file `resume-data-example.json` contains sample data you can use as a starting point.
-
-## 💻 Development
-
-```bash
+# Start development server
 npm run dev
-```
 
-The app will run at `http://localhost:5173`
-
-**Important:** 
-- **View Resume:** `http://localhost:5173/` 
-- **Edit Resume:** `http://localhost:5173/edit`
-
-### 📝 Edit Resume Data
-
-The app provides an integrated **Resume Data Editor** at `/edit`:
-
-1. Navigate to `http://localhost:5173/edit` in your browser
-2. Fill out all sections (Personal Info, Experience, Education, etc.)
-3. **"Save to LocalStorage"** – Save data in the browser
-4. **"Export JSON"** – Download data as `resume-data.json`
-5. Move the JSON file to the `public/` folder
-6. Reload the app – data will be loaded automatically!
-
-**Workflow:**
-```
-/edit → Edit data → Export JSON → Move file to public/ → Done!
-```
-
-The exported `public/resume-data.json` is automatically loaded at app start.
-
-**💡 Tip:** You can version `public/resume-data.json` with Git to track changes to your resume.
-
-## 🏗️ Build
-
-```bash
+# Production build
 npm run build
+
+# Build preview
+npm run preview
 ```
 
-Creates an optimized production build in the `dist/` folder.
+## 📦 Scripts
 
-## 📄 Export as PDF
-
-1. Open the app in your browser (`http://localhost:5173`)
-2. Press `Ctrl + P` (Windows) / `Cmd + P` (Mac)
-3. Select "Save as PDF" as the target
-4. In the settings:
-   - **Background graphics**: Enable (important for colors!)
-   - **Page margins**: Minimal or standard
-5. Save
-
-**Tip:** The blue header will be printed thanks to `print-color-adjust: exact`.
-
-## ✏️ Personalization
-
-### Adjust Data
-
-**Recommended:** Use the **Resume Data Editor** at `/edit` (see above).
-
-**Alternatively:** Edit `src/data/resume-data.ts` directly with your personal information:
-
-```typescript
-export const resumeData: ResumeData = {
-  personalInfo: {
-    name: 'Your Name',
-    location: 'Your City',
-    phone: '+49 ...',
-    email: 'your@email.com',
-    github: 'https://github.com/username',
-    linkedin: 'https://linkedin.com/in/username',
-    profileImage: '/profile.jpg'  // Optional
-  },
-  // ... more data
-}
-```
-
-**Note:** If a `public/resume-data.json` exists, it will be loaded automatically and override `resume-data.ts`.
-
-### Add Profile Image
-
-1. Prepare a square photo (at least 300x300px)
-2. Save as `profile.jpg` or `profile.png` in the `public/` folder
-3. Adjust the path in `resume-data.ts`: `profileImage: '/profile.jpg'`
-
-The image will be displayed as a circle (120px diameter).
-
-### Change Colors
-
-The main color (#0e5091) can be changed in all component files:
-- `src/components/Header.vue`
-- `src/components/Profile.vue`
-- `src/components/Experience.vue`
-- etc.
+- `npm run dev` - Starts the development server (Port 3000)
+- `npm run build` - Creates production build
+- `npm run preview` - Preview of production build
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
+- `npm run lint` - Check code with ESLint
+- `npm run lint:fix` - Fix ESLint errors automatically
+- `npm run type-check` - TypeScript type checking
 
 ## 📁 Project Structure
 
 ```
-resume/
-├── public/              
-│   └── resume-data.json     # Exported resume data (auto-loaded)
-├── src/
-│   ├── components/      # Vue components
-│   │   ├── Header.vue
-│   │   ├── Profile.vue
-│   │   ├── Experience.vue
-│   │   ├── Education.vue
-│   │   ├── Skills.vue
-│   │   ├── Projects.vue
-│   │   └── Interests.vue
-│   ├── views/           # Router views
-│   │   ├── ResumeView.vue
-│   │   └── EditorView.vue  # Resume Data Editor (route: /edit)
-│   ├── router/
-│   │   └── index.ts     # Vue Router config
-│   ├── composables/
-│   │   └── useResumeData.ts # Resume data management & JSON loading
-│   ├── data/
-│   │   └── resume-data.ts   # Fallback data (if no JSON present)
-│   ├── types/
-│   │   └── resume.types.ts  # TypeScript interfaces
-│   ├── App.vue          # Main component with router
-│   ├── main.ts          # Entry point + Font Awesome setup
-│   └── vite-env.d.ts    # TypeScript definitions
-├── .prettierrc          # Prettier config
-├── .prettierignore
-├── index.html
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
+src/
+├── components/         # Vue components
+│   ├── editor/        # Editor components
+│   ├── resume/        # Resume components
+│   └── ToastContainer.vue
+├── composables/       # Reusable composables
+├── constants/         # Constants and configuration
+├── router/           # Vue Router configuration
+├── stores/           # Pinia stores
+├── types/            # TypeScript type definitions
+├── utils/            # Helper functions
+└── views/            # View components
 ```
 
-## 🛠️ Technology Stack
+## 🎨 Customization
 
-- **Vue 3** – Progressive JavaScript framework
-- **TypeScript** – Type safety
-- **Vite** – Build tool & dev server
-- **Vue Router** – Client-side routing
-- **Font Awesome** – Icon library
-  - `@fortawesome/fontawesome-svg-core`
-  - `@fortawesome/free-solid-svg-icons`
-  - `@fortawesome/free-brands-svg-icons`
-  - `@fortawesome/vue-fontawesome`
-- **Prettier** – Code formatter
+### Customize Theme
 
-## 🎨 Design Principles
+Colors can be customized via CSS Custom Properties in `src/App.vue`:
 
-- Clear, professional structure
-- Responsive design (desktop & mobile)
-- Print-first approach for PDF export
-- Consistent icon usage
-- Type-safe data management
+```css
+:root {
+  --color-primary: #0e5091;
+  --color-success: #28a745;
+  /* ... more colors */
+}
+```
 
-## 📝 License
+### JSON Resume Format
 
-Free for private and commercial use.
+The project uses the [JSON Resume Schema](https://jsonresume.org/schema/). Sample data can be found in `public/cv-data.json`.
 
----
+## 🔧 Technologies
 
-**Made with ❤️ and Vue 3**
+- **Vue 3** - Progressive JavaScript Framework
+- **TypeScript** - Type-safe JavaScript
+- **Vite** - Next Generation Frontend Tooling
+- **Pinia** - State Management
+- **Vue Router** - Routing
+- **Font Awesome** - Icons
+- **Paged.js** - Print Optimization
+
+## 📝 Usage
+
+1. Open the app in your browser
+2. Click "Edit" to go to the editor
+3. Edit your data in the editor
+4. Data is automatically saved
+5. Switch to the resume view to see the result
+6. Use the "PDF/Print" button to create a PDF
+
+## 🤝 Contributing
+
+Contributions are welcome! Please create a pull request.
+
+## 📄 License
+
+MIT License
+
+## 🌟 Credits
+
+Built with Vue 3, TypeScript and ❤️

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Basics } from "../../types/resume.types";
-import { defineProps } from "vue";
 defineProps<{
   basics: Basics;
 }>();
@@ -38,20 +37,6 @@ defineProps<{
             <font-awesome-icon v-if="profile.icon" :icon="['fab', profile.icon]" />
             {{ profile.network }}
           </a>
-          <!-- <a v-if="basics.github" :href="basics.github" target="_blank">
-            <font-awesome-icon :icon="['fab', 'github']" />
-            {{ basics.github.split('/').pop() }}
-          </a>
-          <span v-if="basics.github && basics.linkedin">|</span>
-          <a v-if="basics.linkedin" :href="basics.linkedin" target="_blank">
-            <font-awesome-icon :icon="['fab', 'linkedin']" />
-            LinkedIn
-          </a>
-          <span v-if="basics.linkedin && basics.website">|</span>
-          <a v-if="basics.website" :href="basics.website" target="_blank">
-            <font-awesome-icon :icon="['fas', 'globe']" />
-            Website
-          </a> -->
         </p>
       </div>
     </div>
@@ -60,7 +45,7 @@ defineProps<{
 
 <style scoped>
 .cv-header {
-  background-color: #0e5091;
+  background-color: var(--color-primary);
   color: white;
   padding: 40px 20px;
   text-align: center;
@@ -144,6 +129,7 @@ defineProps<{
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  margin-right: 12px;
 }
 
 .social-links a:hover {
@@ -158,7 +144,7 @@ defineProps<{
 
 @media print {
   .cv-header {
-    background-color: #0e5091 !important;
+    background-color: var(--color-primary) !important;
     color: white !important;
     padding: 20px 1.5cm;
     -webkit-print-color-adjust: exact;
