@@ -15,7 +15,7 @@ export const useCVStore = defineStore("cv", () => {
   let saveTimeout: number | undefined;
   watch(
     resumeData,
-    (newData) => {
+    () => {
       if (saveTimeout) clearTimeout(saveTimeout);
       saveTimeout = window.setTimeout(() => {
         saveToLocalStorage();

@@ -17,5 +17,5 @@
 <script setup lang="ts">
 import type { Resume } from "../../types/resume.types";
 defineProps<{ modelValue: Resume }>();
-const emit = defineEmits(["addEducation", "removeEducation"]);
+defineEmits(["addEducation", "removeEducation"]);
 </script>

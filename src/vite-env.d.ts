@@ -5,11 +5,3 @@ declare module "*.vue" {
   const component: DefineComponent<object, object, any>;
   export default component;
 }
-
-interface ImportMetaEnv {
-  readonly BASE_URL: string;
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
