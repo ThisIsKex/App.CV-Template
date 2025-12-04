@@ -95,7 +95,7 @@ export const useCVStore = defineStore("cv", () => {
   ) {
     const array = resumeData.value[section];
     if (Array.isArray(array)) {
-      array.push(item as any);
+      (array as Array<typeof item>).push(item);
     }
   }
 

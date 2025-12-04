@@ -26,7 +26,7 @@ const handlePrint = () => {
   }, 1000);
 };
 
-const isEmpty = (arr: any[] | undefined) => !arr || arr.length === 0;
+const isEmpty = (arr: unknown[] | undefined) => !arr || arr.length === 0;
 const hasContent = () => {
   const data = cvStore.resumeData;
   return (

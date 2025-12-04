@@ -23,7 +23,7 @@ export function useFormatting() {
     return `${startDate} - ${endDate}`;
   };
 
-  const isEmpty = (arr: any[] | undefined): boolean => {
+  const isEmpty = (arr: unknown[] | undefined): boolean => {
     return !arr || arr.length === 0;
   };
 
